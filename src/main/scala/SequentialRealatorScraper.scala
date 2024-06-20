@@ -15,6 +15,9 @@ object SequentialRealatorScraper extends App{
   val name = htmlListingElement >> text("h1")
 
   println(name)
+
+  val beerList = browser.get("https://frbbq.com/beer-list/")
+  val beerListElement 
 //  val title = htmlListingElement >> text(".RfADt a")
 //  val price = htmlListingElement >> text(".aBrP0 .ooOxS")
 //
