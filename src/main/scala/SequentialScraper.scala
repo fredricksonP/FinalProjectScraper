@@ -6,7 +6,7 @@ import net.ruippeixotog.scalascraper.dsl.DSL.Parse._
 
 
 
-object SequentialScraper {
+object SequentialScraper extends App {
   //Defining a structure to hold the scraped data
   case class Product(name: String, url: String, image: String, price: String)
 
@@ -57,10 +57,4 @@ object SequentialScraper {
   print_products(products)
 
 
-}
-
-@main
-def main(): Unit = {
-  println("hello world")
-  val scraper = SequentialScraper
 }
