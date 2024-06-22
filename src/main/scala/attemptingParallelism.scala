@@ -8,34 +8,64 @@ import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.concurrent.duration._
 import scala.util.{Failure, Success}
 
-object AttemptingParallelism extends App {
+object attemptingParallelism extends App {
   val browser = JsoupBrowser()
   implicit val ec: ExecutionContext = ExecutionContext.global
+//  val docOne = browser.get("https://en.wikipedia.org/wiki/Main_Page")
+//  val htmlListingElement = docOne >> element("h1")
+//  println(htmlListingElement)
+//
+//  val name = htmlListingElement >> text("h1")
+//  println(name)
+//  println("WTF")
 
   def fetchPage(url: String): Future[Document] = Future {
-    println(s"Fetching page: $url")
-    browser.get(url)
+    try {
+      val newBrowser = JsoupBrowser()
+      println(s"Fetching page: $url")
+      val doc = newBrowser.get(url)
+      println(s"Fetched page successfully: $url")
+      doc
+    } catch {
+      case e: Exception =>
+        println(s"Failed to fetch page: $url. Error: ${e.getMessage}")
+        throw e
+    }
   }
 
   def logDocument(doc: Document): Unit = {
     println("Document fetched successfully.")
   }
 
-  val menuFuture = fetchPage("https://en.wikipedia.org/wiki/Main_Page")
-  val beerListFuture = fetchPage("https://en.wikipedia.org/wiki/Main_Page")
+  def logError(url: String, exception: Throwable): Unit = {
+    println(s"Failed to fetch page: $url. Error: ${exception.getMessage}")
+  }
+
+  val menuFuture = fetchPage("https://frbbq.com/menu/")
+  val beerListFuture = fetchPage("https://frbbq.com/beer-list/")
+
+  val htmlListingElementFuture = menuFuture.map(menu => menu >> element("h1")) 
+  
+  val nameFuture = htmlListingElementFuture.map(htmlListingElement => htmlListingElement >> text("h1")) 
+  nameFuture.onComplete{
+    case Success(doc) =>
+      println(nameFuture)
+    case Failure(_) => ???
+  }
+  
 
   menuFuture.onComplete {
     case Success(doc) =>
       logDocument(doc)
     case Failure(exception) =>
-      println(s"Failed to fetch menu page: ${exception.getMessage}")
+      logError("https://en.wikipedia.org/wiki/Main_Page (menu)", exception)
   }
 
   beerListFuture.onComplete {
     case Success(doc) =>
       logDocument(doc)
     case Failure(exception) =>
-      println(s"Failed to fetch beer list page: ${exception.getMessage}")
+      logError("https://en.wikipedia.org/wiki/Main_Page (beer list)", exception)
   }
 
   // Combining futures to ensure both pages are fetched before proceeding
@@ -56,7 +86,7 @@ object AttemptingParallelism extends App {
     Await.result(combinedFuture, 60.seconds)
     println("Processing completed within timeout.")
   } catch {
-    case e =>
-      println("Processing timed out.")
+    case e: Exception =>
+      println(s"Processing timed out. Error: ${e.getMessage}")
   }
 }
