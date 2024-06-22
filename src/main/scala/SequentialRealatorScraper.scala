@@ -1,4 +1,3 @@
-import SequentialScraper.doc
 import net.ruippeixotog.scalascraper.browser.JsoupBrowser
 import net.ruippeixotog.scalascraper.dsl.DSL.*
 import net.ruippeixotog.scalascraper.dsl.DSL.Extract.*
@@ -21,10 +20,12 @@ object SequentialRealatorScraper extends App{
 //  }
 
 //  val doc = browser.get("https://www.lazada.co.th/shop-mobiles/")
-  val docFuture = browser.get("https://frbbq.com/menu/")
+//  val docFuture = browser.get("https://frbbq.com/menu/")
+  val doc = browser.get("https://en.wikipedia.org/wiki/Main_Page")
 
-  // Use proper CSS selector to find the element
+//   Use proper CSS selector to find the element
   val htmlListingElement =  doc >> element("h1")
+  println(htmlListingElement)
 
   val name = htmlListingElement >> text("h1")
   println(name)

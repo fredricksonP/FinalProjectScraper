@@ -21,8 +21,8 @@ object AttemptingParallelism extends App {
     println("Document fetched successfully.")
   }
 
-  val menuFuture = fetchPage("https://frbbq.com/menu/")
-  val beerListFuture = fetchPage("https://frbbq.com/beer-list/")
+  val menuFuture = fetchPage("https://en.wikipedia.org/wiki/Main_Page")
+  val beerListFuture = fetchPage("https://en.wikipedia.org/wiki/Main_Page")
 
   menuFuture.onComplete {
     case Success(doc) =>
