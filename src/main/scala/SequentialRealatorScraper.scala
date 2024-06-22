@@ -2,22 +2,31 @@ import SequentialScraper.doc
 import net.ruippeixotog.scalascraper.browser.JsoupBrowser
 import net.ruippeixotog.scalascraper.dsl.DSL.*
 import net.ruippeixotog.scalascraper.dsl.DSL.Extract.*
-import net.ruippeixotog.scalascraper.dsl.DSL._
-import net.ruippeixotog.scalascraper.dsl.DSL.Extract._
-import net.ruippeixotog.scalascraper.dsl.DSL.Parse._
+import net.ruippeixotog.scalascraper.dsl.DSL.*
+import net.ruippeixotog.scalascraper.dsl.DSL.Extract.*
 import net.ruippeixotog.scalascraper.dsl.DSL.Parse.*
+import net.ruippeixotog.scalascraper.dsl.DSL.Parse.*
+import net.ruippeixotog.scalascraper.model.Document
+
+import scala.concurrent.{Await, ExecutionContext, Future}
+import scala.concurrent.duration.DurationInt
 //import scala.collection.JavaConversions._
 
 object SequentialRealatorScraper extends App{
   val browser = JsoupBrowser()
+//  implicit val ec: ExecutionContext = ExecutionContext.global
+  //Looking at ways to parallelize my code:
+//  def fetchPage(url: String): Future[Document] = Future {
+//    browser.get(url)
+//  }
+
 //  val doc = browser.get("https://www.lazada.co.th/shop-mobiles/")
-  val doc = browser.get("https://frbbq.com/menu/")
+  val docFuture = browser.get("https://frbbq.com/menu/")
 
   // Use proper CSS selector to find the element
-  val htmlListingElement = doc >> element("h1")
+  val htmlListingElement =  doc >> element("h1")
 
   val name = htmlListingElement >> text("h1")
-
   println(name)
 
   val beerList = browser.get("https://frbbq.com/beer-list/")
