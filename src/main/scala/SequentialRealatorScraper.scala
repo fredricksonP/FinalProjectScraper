@@ -2,6 +2,9 @@ import SequentialScraper.doc
 import net.ruippeixotog.scalascraper.browser.JsoupBrowser
 import net.ruippeixotog.scalascraper.dsl.DSL.*
 import net.ruippeixotog.scalascraper.dsl.DSL.Extract.*
+import net.ruippeixotog.scalascraper.dsl.DSL._
+import net.ruippeixotog.scalascraper.dsl.DSL.Extract._
+import net.ruippeixotog.scalascraper.dsl.DSL.Parse._
 import net.ruippeixotog.scalascraper.dsl.DSL.Parse.*
 //import scala.collection.JavaConversions._
 
@@ -21,13 +24,23 @@ object SequentialRealatorScraper extends App{
 //  val beerListElement = doc >> select("div.fusion-column-wrapper")
   val beerListElements = beerList >> elements("span.fusion-toggle-heading")
 //  println(beerListElements)
+//  val name= beerElement >> text("span.fusion-toggle-heading")
 
-  beerListElements.foreach {
-    beerElement =>
-      val name = beerElement >> text("span.fusion-toggle-heading")
-      val price = beerElement >> text("h5.fusion-responsive-typography-calculated")
-      println(name + " " )
+//  beerListElements.foreach {
+//    beerElement =>
+//      val name = beerElement >> text("span.fusion-toggle-heading")
+////      val price = beerElement >> text("fusion-responsive-typography-calculated")
+//      println(name + " " )
+//  }
+
+//  val priceElements = beerList >> elements("h5.fusion-responsive-typography-calculated")
+
+  val priceElements = beerList >> elements("h5")
+  priceElements.foreach { priceElement =>
+    val price = priceElement.text
+    println(s"Price: $price")
   }
+
 
 //
 //  import java.io.IOException;
