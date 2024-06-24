@@ -65,7 +65,7 @@ object attemptingParallelism extends App {
 
   Await.result(beerListElementsFuture, 30.seconds)
   Await.result(nameFuture, 30.seconds)
-  
+
   menuFuture.onComplete {
     case Success(doc) =>
       logDocument(doc)
