@@ -1,15 +1,39 @@
-import SequentialScraper.{doc, htmlProductElements}
+import org.openqa.selenium.WebDriver
+import org.openqa.selenium.chrome.ChromeDriver
+import org.openqa.selenium.chrome.ChromeOptions
+import org.openqa.selenium.By
+import org.openqa.selenium.support.ui.WebDriverWait
+import org.openqa.selenium.support.ui.ExpectedConditions
 import net.ruippeixotog.scalascraper.browser.JsoupBrowser
-import net.ruippeixotog.scalascraper.dsl.DSL.*
-import net.ruippeixotog.scalascraper.dsl.DSL.Extract.*
-import net.ruippeixotog.scalascraper.dsl.DSL.*
-import net.ruippeixotog.scalascraper.dsl.DSL.Extract.*
-import net.ruippeixotog.scalascraper.dsl.DSL.Parse.*
-import net.ruippeixotog.scalascraper.dsl.DSL.Parse.*
+import net.ruippeixotog.scalascraper.dsl.DSL._
+import net.ruippeixotog.scalascraper.dsl.DSL.Extract._
+import net.ruippeixotog.scalascraper.dsl.DSL.Parse._
 import net.ruippeixotog.scalascraper.model.Document
+import scala.jdk.CollectionConverters._
 
 object LargeScraper extends App{
-  //First connect to a realty website
+  // Set the path to the ChromeDriver executable
+  System.setProperty("webdriver.chrome.driver", "src/main/scala/chromedriver-mac-arm64/chromedriver")
+
+  // Initialize the ChromeDriver
+  val options = new ChromeOptions()
+  options.addArguments("--headless")
+  val driver: WebDriver = new ChromeDriver()
+
+  try {
+    // Navigate to the desired URL
+//    driver.get("https://www.fivestars-thailand.com/en/sale/bangkok")
+    driver.get("https://the-internet.herokuapp.com/")
+    // Click the button to view more listings
+    val button = driver.findElement(By.id("show-more"))
+    button.click()
+  }
+  finally
+  {
+    // Close the browser
+    driver.quit()
+  }
+    //First connect to a realty website
   //TODO: Find a website for analysis
 //  https://www.realtor.com/realestateandhomes-search/Colorado-Springs_CO
   val browser = JsoupBrowser()
