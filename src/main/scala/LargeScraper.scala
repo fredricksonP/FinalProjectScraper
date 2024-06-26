@@ -18,12 +18,19 @@ object LargeScraper extends App{
   // Initialize the ChromeDriver
   val options = new ChromeOptions()
   options.addArguments("--headless")
+  options.addArguments("--allowed-ips")
   val driver: WebDriver = new ChromeDriver()
+
+
+  //Go to this website:
+//  https://www.kaggle.com/datasets/nelgiriyewithana/most-streamed-spotify-songs-2024
 
   try {
     // Navigate to the desired URL
 //    driver.get("https://www.fivestars-thailand.com/en/sale/bangkok")
     driver.get("https://the-internet.herokuapp.com/")
+//    driver.get("https://data.lacity.org/Public-Safety/Crime-Data-from-2020-to-Present/2nrs-mtv8/data_preview")
+
     // Click the button to view more listings
     val button = driver.findElement(By.id("show-more"))
     button.click()
