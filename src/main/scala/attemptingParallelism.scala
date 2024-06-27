@@ -12,13 +12,6 @@ import scala.util.{Failure, Success}
 object attemptingParallelism extends App {
   val browser = JsoupBrowser()
   implicit val ec: ExecutionContext = ExecutionContext.global
-  //  val docOne = browser.get("https://en.wikipedia.org/wiki/Main_Page")
-  //  val htmlListingElement = docOne >> element("h1")
-  //  println(htmlListingElement)
-  //
-  //  val name = htmlListingElement >> text("h1")
-  //  println(name)
-  //  println("WTF")
 
   //function to turn page connectoin into a future
   def fetchPage(url: String): Future[Document] = Future {
