@@ -1,4 +1,5 @@
 import SequentialRealatorScraper.{browser, htmlListingElement}
+import com.google.common.util.concurrent.AtomicDouble
 import net.ruippeixotog.scalascraper.scraper.ContentExtractors.text
 import net.ruippeixotog.scalascraper.browser.JsoupBrowser
 import net.ruippeixotog.scalascraper.dsl.DSL.*
@@ -9,13 +10,16 @@ import net.ruippeixotog.scalascraper.dsl.DSL.Parse.*
 import net.ruippeixotog.scalascraper.dsl.DSL.Parse.*
 import net.ruippeixotog.scalascraper.model.Document
 
+import java.util.concurrent.atomic.AtomicLong
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.io.Source
+import scala.math._
 
 object booksToScrapeSequential extends App{
   //open the csv file of all links to books to scrape
   // Specify the path to your file
+  var highestBookPrice = AtomicDouble(0.0) //The atomic double used for highest price
 
   implicit val ec: ExecutionContext = ExecutionContext.global
   val filePath = "src/main/scala/bookslinks.csv"
@@ -29,9 +33,20 @@ object booksToScrapeSequential extends App{
       println(s"Fetching page: $url")
       val doc = newBrowser.get(url)
       val bookTitle = doc  >> text("h1")
-      println(bookTitle)
+//      val bookPrice = doc  >> text("price_color")
+      val bookPrice = doc >> element(".price_color")
+      val bookPriceParsed = bookPrice.text
+      val bookPriceDouble = bookPriceParsed.drop(1).toDouble
+
+//      if (bookPriceDouble > highestBookPrice.get()) {
+//        print("yo")
+//      }
+//      highestBookPrice = max(book)
+      println("Title: " + bookTitle)
+      println("Price: " + bookPriceParsed)
+
       println(s"Fetched page successfully: $url")
-      doc
+//      doc
     } catch {
       case e: Exception =>
         println(s"Failed to fetch page: $url. Error: ${e.getMessage}")
@@ -46,13 +61,7 @@ object booksToScrapeSequential extends App{
   val fetchedPages = bufferedSource.getLines().map( x => fetchPage(x))
   val allPages = Future.sequence(fetchedPages)
   // Read each line
-//  for (line <- bufferedSource.getLines()) {
-//    // Print the line (or do any processing)
-//    println(line)
-//    val doc = browser.get(line)
-//    val bookTitle = doc  >> text("h1")
-//    println(bookTitle)
-//  }
+
   // Get the end time
   Await.result(allPages, Duration.Inf)
   val endTime = System.nanoTime()
