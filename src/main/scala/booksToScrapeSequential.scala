@@ -19,10 +19,8 @@ import scala.io.Source
 import scala.jdk.CollectionConverters._
 import scalaz.Leibniz.subst
 
-
-
-
 object booksToScrapeSequential extends App{
+  case class Product(upc: String, prod_type: String, image: String, price: String)
   //open the csv file of all links to books to scrape
   // Specify the path to your file
 //  var highestBookPrice = AtomicDouble(0.0) //The atomic double used for highest price
@@ -69,11 +67,15 @@ object booksToScrapeSequential extends App{
       val table = doc >> element("tbody") // Select the tbody element
       val rows = (table >> elements("tr") >> elements("td")).toVector // Select all rows in the tbody
       val rowIndex = 2 // For example, to get the third row (index starts at 0)
-      val row = rows(rowIndex)
-      println("Row captured: " + rows(rowIndex))
+
+
+      println("Row captured: " + rows(0))
       println("Row captured: " + rows(1))
-      println("Row captured: " + rows(4))
+      println("Row captured: " + rows(2))
       println("Row captured: " + rows(3))
+      println("Row captured: " + rows(4))
+      println("Row captured: " + rows(5))
+      println("Row captured: " + rows(6))
 
 
 
