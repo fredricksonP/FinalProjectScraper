@@ -16,9 +16,6 @@ import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.io.Source
 
 
-import scala.jdk.CollectionConverters._
-import scalaz.Leibniz.subst
-
 object booksToScrapeSequential extends App{
   case class Product(upc: String, prod_type: String, image: String, price: String)
   //open the csv file of all links to books to scrape
@@ -34,6 +31,12 @@ object booksToScrapeSequential extends App{
 //    def get: Vector[Double] = this.synchronized {
 //      setOfVisited
 //    }
+
+//TODO: Make some sort of atomically locked double to keep track of hifhest price
+//TODO: make some sort of thread safe list to keep track of all prices
+//TODO: Calc average price
+//TODO: Keep track of availability
+//TODO: Make methods to get low stock, medium stock and high stock
 
   implicit val ec: ExecutionContext = ExecutionContext.global
   val filePath = "src/main/scala/bookslinks.csv"
