@@ -22,40 +22,29 @@ import scala.concurrent.duration.Duration
 
 object parallelScaperWithData extends App {
   implicit val ec: ExecutionContext = ExecutionContext.global
+  case class Book(title: String, price: Double, url: String)
 
-  def fetchPage(url: String): Future[Document] = Future {
+  def fetchPage(url: String): Future[Book] = Future {
     try {
       val newBrowser = JsoupBrowser()
-      println(s"Fetching page: $url")
-      val doc = newBrowser.get(url)
-      doc
-    } catch {
-      case e: Exception =>
-        println(s"Failed to fetch page: $url. Error: ${e.getMessage}")
-        throw e
-    }
-  }
+      println(s"Fetching page: $url") //Update console to show which page is being scraped
+      val doc = newBrowser.get(url) //Establish jsoup connection
 
-  def scrapePage(doc: Document): Unit = {
-    try {
-      val bookTitle = doc >> text("h1")
+      val bookTitle = doc  >> text("h1")
       val bookPrice = doc >> element(".price_color")
       val bookPriceParsed = bookPrice.text
       val bookPriceDouble = bookPriceParsed.drop(1).toDouble
 
-      // Update the highest price safely
-      // highestPrice.set(math.max(highestPrice.get(), bookPriceDouble))
-      println(s"Title: $bookTitle")
-      println(s"Price: $$${bookPriceParsed}")
-
       val table = doc >> element("tbody") // Select the tbody element
       val rows = (table >> elements("tr") >> elements("td")).toVector // Select all rows in the tbody
+      val rowIndex = 2 // For example, to get the third row (index starts at 0)
 
-      println("Row captured: " + rows.mkString(", "))
+      Book(bookTitle, bookPriceDouble, url)
 
     } catch {
       case e: Exception =>
-        println(s"Failed to scrape data from document. Error: ${e.getMessage}")
+        println(s"Failed to fetch page: $url. Error: ${e.getMessage}")
+        throw e
     }
   }
 
@@ -66,18 +55,22 @@ object parallelScaperWithData extends App {
   // Get the start time
   val startTime = System.nanoTime()
 
-  // Fetch pages in parallel
-  val fetchedPages = bufferedSource.getLines().map(x => fetchPage(x)).toList
-  val allPages = Future.sequence(fetchedPages)
 
-  // Scrape pages in parallel
-  val scrapeFutures: Future[Unit] = allPages.flatMap { documents =>
-    // Map each Document to a Future[Unit] by applying scrapePage to each Document
-    Future.sequence(documents.map(doc => Future(scrapePage(doc)))).map(_ => ())
+  val urls = bufferedSource.getLines().toList
+  val fetchFutures = urls.map(fetchPage)
+
+  val allPagesFuture = Future.sequence(fetchFutures)
+
+  val maxPriceFuture = allPagesFuture.map { books =>
+    books.maxBy(_.price)
   }
 
+  val maxPriceBook = Await.result(maxPriceFuture, Duration.Inf)
+
+  println(s"The book with the highest price is: ${maxPriceBook.title} at $$${maxPriceBook.price}, URL: ${maxPriceBook.url}")
+
   // Wait for all scraping to complete
-  Await.result(scrapeFutures, Duration.Inf)
+//  Await.result(scrapeFutures, Duration.Inf)
 
   // Get the end time
   val endTime = System.nanoTime()
