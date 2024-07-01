@@ -10,7 +10,7 @@ import scala.io.Source
 
 object parallelScaperWithData extends App {
   implicit val ec: ExecutionContext = ExecutionContext.global
-  case class Book(title: String, price: Double, url: String)
+  case class Book(title: String, price: Double, stock: Int, url: String)
   case class FinalResults(averageBookPrice: Double, maxBookPrice: Double, lowStockCount: Int, medStockCount: Int, HighStockCount: Int)
 
   def fetchPage(url: String): Future[Book] = Future {
@@ -36,7 +36,10 @@ object parallelScaperWithData extends App {
       println("Row 5 captured: " + rows(5))
       println("Row 6 captured: " + rows(6))
 
-      Book(bookTitle, bookPriceDouble, url)
+      val bookStock = rows(5).text.filter(_.isDigit).toInt
+//      println("Book stocK: " + bookStock.filter(_.isDigit).toInt)
+
+      Book(bookTitle, bookPriceDouble, bookStock, url)
 
     } catch {
       case e: Exception =>
@@ -68,17 +71,18 @@ object parallelScaperWithData extends App {
       val maxPriceBook = books.maxBy(_.price)
       val totalPrice = books.map(_.price).sum
       val avgPrice = totalPrice / books.length
+      val totalStock = books.map(_.stock).sum
+      val avgStock = totalStock / books.length
 
       println(s"The book with the highest price is: ${maxPriceBook.title} at $$${maxPriceBook.price}, URL: ${maxPriceBook.url}")
-      println(s"The average price of all books is: $$${avgPrice}")
+      println(s"The average price of all books is: ${avgPrice}")
+      println(s"The average stock for books is: ${avgStock}")
 
     case Failure(ex) =>
       println(s"Failed to fetch and process pages. Error: ${ex.getMessage}")
   }
 
   val maxPriceBook = Await.result(maxPriceFuture, Duration.Inf)
-
-  println(s"The book with the highest price is: ${maxPriceBook.title} at $$${maxPriceBook.price}, URL: ${maxPriceBook.url}")
 
   // Wait for all scraping to complete
 //  Await.result(scrapeFutures, Duration.Inf)
