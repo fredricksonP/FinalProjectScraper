@@ -20,6 +20,22 @@ object parallelScaperWithData extends App {
       val doc = newBrowser.get(url) //Establish jsoup connection
 
       val bookTitle = doc  >> text("h1")
+      //As soon as I get a title I will search amazon
+//      println(boo)
+      if(bookTitle == "The Dirty Little Secrets of Getting Your Dream Job"){
+        //Found this helpful method to replace parts of a string: https://www.geeksforgeeks.org/scala-string-replace-method-with-example/
+        val convTitleToSearch = bookTitle.replace(" ", "+")
+        println("\n\n\n Found Target Book")
+        println(convTitleToSearch)
+
+        val amazonConnection = "https://www.amazon.com/s?k=" + convTitleToSearch
+        val amazonBrowser = JsoupBrowser()
+//        println(s"\n\n\nFetching page: $url\n\n\n") //Update console to show which page is being scraped
+        val amazonDoc = amazonBrowser.get(amazonConnection)
+        println(amazonDoc)
+        println("\n\n\n")
+      }
+
       val bookPrice = doc >> element(".price_color")
       val bookPriceParsed = bookPrice.text
       val bookPriceDouble = bookPriceParsed.drop(1).toDouble
@@ -28,13 +44,14 @@ object parallelScaperWithData extends App {
       val rows = (table >> elements("tr") >> elements("td")).toVector // Select all rows in the tbody
       val rowIndex = 2 // For example, to get the third row (index starts at 0)
 
-      println("Row 0 captured: " + rows(0))
-      println("Row 1 captured: " + rows(1))
-      println("Row 2 captured: " + rows(2))
-      println("Row 3 captured: " + rows(3))
-      println("Row 4 captured: " + rows(4))
-      println("Row 5 captured: " + rows(5))
-      println("Row 6 captured: " + rows(6))
+      //Printing out the table rows
+//      println("Row 0 captured: " + rows(0))
+//      println("Row 1 captured: " + rows(1))
+//      println("Row 2 captured: " + rows(2))
+//      println("Row 3 captured: " + rows(3))
+//      println("Row 4 captured: " + rows(4))
+//      println("Row 5 captured: " + rows(5))
+//      println("Row 6 captured: " + rows(6))
 
       val bookStock = rows(5).text.filter(_.isDigit).toInt
 //      println("Book stocK: " + bookStock.filter(_.isDigit).toInt)
