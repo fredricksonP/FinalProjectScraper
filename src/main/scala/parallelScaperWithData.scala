@@ -8,6 +8,12 @@ import net.ruippeixotog.scalascraper.dsl.DSL.Extract.*
 import scala.io.Source
 
 
+//NOTES TO SELF
+/*
+  If you want to scrape by a certain calss name in a div element
+  you have to add a period berfore the div class name ex -> element(".sg-col-inner")
+ */
+
 object parallelScaperWithData extends App {
   implicit val ec: ExecutionContext = ExecutionContext.global
   case class Book(title: String, price: Double, stock: Int, url: String)
@@ -21,8 +27,10 @@ object parallelScaperWithData extends App {
 
       val bookTitle = doc  >> text("h1")
       //As soon as I get a title I will search amazon
-//      println(boo)
-      if(bookTitle == "The Dirty Little Secrets of Getting Your Dream Job"){
+
+
+//      if(bookTitle == "The Dirty Little Secrets of Getting Your Dream Job" ){
+      if (bookTitle == "Sapiens: A Brief History of Humankind") {
         //Found this helpful method to replace parts of a string: https://www.geeksforgeeks.org/scala-string-replace-method-with-example/
         val convTitleToSearch = bookTitle.replace(" ", "+")
         println("\n\n\n Found Target Book")
@@ -30,10 +38,17 @@ object parallelScaperWithData extends App {
 
         val amazonConnection = "https://www.amazon.com/s?k=" + convTitleToSearch
         val amazonBrowser = JsoupBrowser()
-//        println(s"\n\n\nFetching page: $url\n\n\n") //Update console to show which page is being scraped
+        println(s"\n\n\nFetching page: $amazonConnection\n\n\n") //Update console to show which page is being scraped
         val amazonDoc = amazonBrowser.get(amazonConnection)
-        println(amazonDoc)
+        val firstProduct = amazonDoc >> elements(".sg-col-inner") >> text(".a-price-whole")
+        val firstProductDecimal = amazonDoc >> elements(".sg-col-inner") >> text(".a-price-fraction")
+        val firstProductPriceDouble = (firstProduct + firstProductDecimal).toDouble
+        println(firstProduct.take(5))
+        println(firstProductDecimal.take(5))
+        println(firstProductPriceDouble)
         println("\n\n\n")
+
+        System.exit(0)
       }
 
       val bookPrice = doc >> element(".price_color")
