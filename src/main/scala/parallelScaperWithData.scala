@@ -38,17 +38,18 @@ object parallelScaperWithData extends App {
 
         val amazonConnection = "https://www.amazon.com/s?k=" + convTitleToSearch
         val amazonBrowser = JsoupBrowser()
-        println(s"\n\n\nFetching page: $amazonConnection\n\n\n") //Update console to show which page is being scraped
+//        println(s"\n\n\nFetching page: $amazonConnection\n\n\n") //Update console to show which page is being scraped
+        println(s"Fetching page: $amazonConnection") //Update console to show which page is being scraped
         val amazonDoc = amazonBrowser.get(amazonConnection)
-        val firstProduct = amazonDoc >> elements(".sg-col-inner") >> text(".a-price-whole")
-        val firstProductDecimal = amazonDoc >> elements(".sg-col-inner") >> text(".a-price-fraction")
-        val firstProductPriceDouble = (firstProduct + firstProductDecimal).toDouble
-        println(firstProduct.take(5))
-        println(firstProductDecimal.take(5))
-        println(firstProductPriceDouble)
-        println("\n\n\n")
+//        val firstProduct = amazonDoc >> elements(".sg-col-inner") >> text(".a-price-whole")
+//        val firstProductDecimal = amazonDoc >> elements(".sg-col-inner") >> text(".a-price-fraction")
+//        val firstProductPriceDouble = (firstProduct + firstProductDecimal).toDouble
+//        println(firstProduct.take(5))
+//        println(firstProductDecimal.take(5))
+//        println("Amazon Link: " + amazonConnection + " Amazon Price: " + firstProductPriceDouble)
+//        println("\n\n\n")
 
-        System.exit(0)
+//        System.exit(0)
       }
 
       val bookPrice = doc >> element(".price_color")
