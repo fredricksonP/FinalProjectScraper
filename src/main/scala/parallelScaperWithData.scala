@@ -1,10 +1,12 @@
 import scala.concurrent.{Await, ExecutionContext, Future}
-import scala.util.{Failure, Success}
+import scala.util.{Failure, Random, Success}
 import net.ruippeixotog.scalascraper.browser.JsoupBrowser
-import net.ruippeixotog.scalascraper.dsl.DSL._
+import net.ruippeixotog.scalascraper.dsl.DSL.*
 import net.ruippeixotog.scalascraper.model.Document
+
 import scala.concurrent.duration.Duration
 import net.ruippeixotog.scalascraper.dsl.DSL.Extract.*
+
 import scala.io.Source
 
 
@@ -19,6 +21,50 @@ object parallelScaperWithData extends App {
   case class Book(title: String, price: Double, stock: Int, url: String)
   case class FinalResults(averageBookPrice: Double, maxBookPrice: Double, lowStockCount: Int, medStockCount: Int, HighStockCount: Int)
 
+  //A random wait timer to space out requests to amazon
+  def randomWait(minSeconds: Int, maxSeconds: Int): Unit = {
+    val random = new Random()
+    val waitTime = minSeconds + random.nextInt((maxSeconds - minSeconds) + 1)
+    println(s"Waiting for $waitTime seconds...")
+    Thread.sleep(waitTime * 1000)
+    println("Done waiting!")
+  }
+
+
+
+
+  def findBookOnAmazon(bookTitle: String): Unit = {
+    println("in here")
+    //TODO: Remove statements that limit the number of book titles searched on amazon.
+    //TODO: Add some sort of try catch in case amazon fails
+    //TODO: Add some sort of delay to see if I can keep from getting blocked by amazon
+    //TODO: If I can finally add all functionality, then fileter out bogus $0.0 pices
+    //      if(bookTitle == "The Dirty Little Secrets of Getting Your Dream Job" ){
+//    if (bookTitle == "Sapiens: A Brief History of Humankind") {
+      //Found this helpful method to replace parts of a string: https://www.geeksforgeeks.org/scala-string-replace-method-with-example/
+      val convTitleToSearch = bookTitle.replace(" ", "+")
+      println("\n\n\n Found Target Book")
+      println(convTitleToSearch)
+
+      val amazonConnection = "https://www.amazon.com/s?k=" + convTitleToSearch
+      randomWait(20, 40)
+      val amazonBrowser = JsoupBrowser()
+      //        println(s"\n\n\nFetching page: $amazonConnection\n\n\n") //Update console to show which page is being scraped
+      println(s"Fetching page: $amazonConnection") //Update console to show which page is being scraped
+      val amazonDoc = amazonBrowser.get(amazonConnection)
+      val firstProduct = amazonDoc >> elements(".sg-col-inner") >> text(".a-price-whole")
+      val firstProductDecimal = amazonDoc >> elements(".sg-col-inner") >> text(".a-price-fraction")
+      val firstProductPriceDouble = (firstProduct + firstProductDecimal).toDouble
+      //        println(firstProduct.take(5))
+      //        println(firstProductDecimal.take(5))
+      println("Amazon Link: " + amazonConnection + " Amazon Price: " + firstProductPriceDouble)
+      //        System.exit(0)
+//    }
+//    Book(bookTitle, -0.00, -1, amazonConnection)
+  }
+
+
+
   def fetchPage(url: String): Future[Book] = Future {
     try {
       val newBrowser = JsoupBrowser()
@@ -27,30 +73,9 @@ object parallelScaperWithData extends App {
 
       val bookTitle = doc  >> text("h1")
       //As soon as I get a title I will search amazon
-
-
-//      if(bookTitle == "The Dirty Little Secrets of Getting Your Dream Job" ){
-      if (bookTitle == "Sapiens: A Brief History of Humankind") {
-        //Found this helpful method to replace parts of a string: https://www.geeksforgeeks.org/scala-string-replace-method-with-example/
-        val convTitleToSearch = bookTitle.replace(" ", "+")
-        println("\n\n\n Found Target Book")
-        println(convTitleToSearch)
-
-        val amazonConnection = "https://www.amazon.com/s?k=" + convTitleToSearch
-        val amazonBrowser = JsoupBrowser()
-//        println(s"\n\n\nFetching page: $amazonConnection\n\n\n") //Update console to show which page is being scraped
-        println(s"Fetching page: $amazonConnection") //Update console to show which page is being scraped
-        val amazonDoc = amazonBrowser.get(amazonConnection)
-//        val firstProduct = amazonDoc >> elements(".sg-col-inner") >> text(".a-price-whole")
-//        val firstProductDecimal = amazonDoc >> elements(".sg-col-inner") >> text(".a-price-fraction")
-//        val firstProductPriceDouble = (firstProduct + firstProductDecimal).toDouble
-//        println(firstProduct.take(5))
-//        println(firstProductDecimal.take(5))
-//        println("Amazon Link: " + amazonConnection + " Amazon Price: " + firstProductPriceDouble)
-//        println("\n\n\n")
-
-//        System.exit(0)
-      }
+      println("before here")
+      findBookOnAmazon(bookTitle);
+      println("After here")
 
       val bookPrice = doc >> element(".price_color")
       val bookPriceParsed = bookPrice.text
