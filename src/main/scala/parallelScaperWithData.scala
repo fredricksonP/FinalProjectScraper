@@ -31,36 +31,32 @@ object parallelScaperWithData extends App {
   }
 
 
-
-
   def findBookOnAmazon(bookTitle: String): Unit = {
-    println("in here")
     //TODO: Remove statements that limit the number of book titles searched on amazon.
     //TODO: Add some sort of try catch in case amazon fails
     //TODO: Add some sort of delay to see if I can keep from getting blocked by amazon
-    //TODO: If I can finally add all functionality, then fileter out bogus $0.0 pices
-    //      if(bookTitle == "The Dirty Little Secrets of Getting Your Dream Job" ){
-//    if (bookTitle == "Sapiens: A Brief History of Humankind") {
-      //Found this helpful method to replace parts of a string: https://www.geeksforgeeks.org/scala-string-replace-method-with-example/
-      val convTitleToSearch = bookTitle.replace(" ", "+")
-      println("\n\n\n Found Target Book")
-      println(convTitleToSearch)
-      val amazonConnection = "https://www.amazon.com/s?k=" + convTitleToSearch
+    //TODO: If I can finally add all functionality, then filter out bogus $0.0 pieces
 
-      try { //Try to make an amazon connection which searches a corresponding book title
-          randomWait(15, 35) //Set up a random waiting range to space out connections to Amazon and prevent from getting blocked
-          val amazonBrowser = JsoupBrowser()
-          println(s"Fetching Amazon page: $amazonConnection") //Update console to show which page is being scraped from amazon
-          val amazonDoc = amazonBrowser.get(amazonConnection)
+    //Found this helpful method to replace parts of a string: https://www.geeksforgeeks.org/scala-string-replace-method-with-example/
+    val convTitleToSearch = bookTitle.replace(" ", "+")
+    println("\n\n\n Found Target Book")
+    println(convTitleToSearch)
+    val amazonConnection = "https://www.amazon.com/s?k=" + convTitleToSearch
 
-          val firstProduct = amazonDoc >> elements(".sg-col-inner") >> text(".a-price-whole") //After connection is established, book prices need to be scraped
-          val firstProductDecimal = amazonDoc >> elements(".sg-col-inner") >> text(".a-price-fraction")
-          val firstProductPriceDouble = (firstProduct + firstProductDecimal).toDouble
-          println("Amazon Link: " + amazonConnection + " Amazon Price: " + firstProductPriceDouble)
-      } catch { //Book could not be on amazon, if that's the case we will print that out
-        case e: Exception =>
-          println(s"Failed to fetch page: $amazonConnection. Error: ${e.getMessage}")
-      }
+    try { //Try to make an amazon connection which searches a corresponding book title
+        randomWait(20, 35) //Set up a random waiting range to space out connections to Amazon and prevent from getting blocked
+        val amazonBrowser = JsoupBrowser()
+        println(s"Fetching Amazon page: $amazonConnection") //Update console to show which page is being scraped from amazon
+        val amazonDoc = amazonBrowser.get(amazonConnection)
+
+        val firstProduct = amazonDoc >> elements(".sg-col-inner") >> text(".a-price-whole") //After connection is established, book prices need to be scraped
+        val firstProductDecimal = amazonDoc >> elements(".sg-col-inner") >> text(".a-price-fraction")
+        val firstProductPriceDouble = (firstProduct + firstProductDecimal).toDouble
+        println("Amazon Link: " + amazonConnection + " Amazon Price: " + firstProductPriceDouble)
+    } catch { //Book could not be on amazon, if that's the case we will print that out
+      case e: Exception =>
+        println(s"Failed to fetch page: $amazonConnection. Error: ${e.getMessage}")
+    }
   }
 
 
@@ -72,10 +68,11 @@ object parallelScaperWithData extends App {
       val doc = newBrowser.get(url) //Establish jsoup connection
 
       val bookTitle = doc  >> text("h1")
+
       //As soon as I get a title I will search amazon
-      println("before here")
-      findBookOnAmazon(bookTitle);
-      println("After here")
+//      println("before here")
+//      findBookOnAmazon(bookTitle);
+//      println("After here")
 
       val bookPrice = doc >> element(".price_color")
       val bookPriceParsed = bookPrice.text
@@ -94,8 +91,7 @@ object parallelScaperWithData extends App {
 //      println("Row 5 captured: " + rows(5))
 //      println("Row 6 captured: " + rows(6))
 
-      val bookStock = rows(5).text.filter(_.isDigit).toInt
-//      println("Book stocK: " + bookStock.filter(_.isDigit).toInt)
+      val bookStock = rows(5).text.filter(_.isDigit).toInt //Get the book stock from the table
 
       Book(bookTitle, bookPriceDouble, bookStock, url)
 
