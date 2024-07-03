@@ -45,22 +45,22 @@ object parallelScaperWithData extends App {
       val convTitleToSearch = bookTitle.replace(" ", "+")
       println("\n\n\n Found Target Book")
       println(convTitleToSearch)
-
       val amazonConnection = "https://www.amazon.com/s?k=" + convTitleToSearch
-      randomWait(20, 40)
-      val amazonBrowser = JsoupBrowser()
-      //        println(s"\n\n\nFetching page: $amazonConnection\n\n\n") //Update console to show which page is being scraped
-      println(s"Fetching page: $amazonConnection") //Update console to show which page is being scraped
-      val amazonDoc = amazonBrowser.get(amazonConnection)
-      val firstProduct = amazonDoc >> elements(".sg-col-inner") >> text(".a-price-whole")
-      val firstProductDecimal = amazonDoc >> elements(".sg-col-inner") >> text(".a-price-fraction")
-      val firstProductPriceDouble = (firstProduct + firstProductDecimal).toDouble
-      //        println(firstProduct.take(5))
-      //        println(firstProductDecimal.take(5))
-      println("Amazon Link: " + amazonConnection + " Amazon Price: " + firstProductPriceDouble)
-      //        System.exit(0)
-//    }
-//    Book(bookTitle, -0.00, -1, amazonConnection)
+
+      try { //Try to make an amazon connection which searches a corresponding book title
+          randomWait(15, 35) //Set up a random waiting range to space out connections to Amazon and prevent from getting blocked
+          val amazonBrowser = JsoupBrowser()
+          println(s"Fetching Amazon page: $amazonConnection") //Update console to show which page is being scraped from amazon
+          val amazonDoc = amazonBrowser.get(amazonConnection)
+
+          val firstProduct = amazonDoc >> elements(".sg-col-inner") >> text(".a-price-whole") //After connection is established, book prices need to be scraped
+          val firstProductDecimal = amazonDoc >> elements(".sg-col-inner") >> text(".a-price-fraction")
+          val firstProductPriceDouble = (firstProduct + firstProductDecimal).toDouble
+          println("Amazon Link: " + amazonConnection + " Amazon Price: " + firstProductPriceDouble)
+      } catch { //Book could not be on amazon, if that's the case we will print that out
+        case e: Exception =>
+          println(s"Failed to fetch page: $amazonConnection. Error: ${e.getMessage}")
+      }
   }
 
 
