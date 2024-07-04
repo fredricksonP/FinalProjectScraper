@@ -32,9 +32,6 @@ object parallelScaperWithData extends App {
 
 
   def findBookOnAmazon(bookTitle: String): Unit = {
-    //TODO: Remove statements that limit the number of book titles searched on amazon.
-    //TODO: Add some sort of try catch in case amazon fails
-    //TODO: Add some sort of delay to see if I can keep from getting blocked by amazon
     //TODO: If I can finally add all functionality, then filter out bogus $0.0 pieces
 
     //Found this helpful method to replace parts of a string: https://www.geeksforgeeks.org/scala-string-replace-method-with-example/
@@ -70,9 +67,9 @@ object parallelScaperWithData extends App {
       val bookTitle = doc  >> text("h1")
 
       //As soon as I get a title I will search amazon
-//      println("before here")
-//      findBookOnAmazon(bookTitle);
-//      println("After here")
+      println("before here")
+      findBookOnAmazon(bookTitle);
+      println("After here")
 
       val bookPrice = doc >> element(".price_color")
       val bookPriceParsed = bookPrice.text
