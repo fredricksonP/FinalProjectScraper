@@ -11,6 +11,21 @@ import net.ruippeixotog.scalascraper.dsl.DSL.Parse._
 import net.ruippeixotog.scalascraper.model.Document
 import scala.jdk.CollectionConverters._
 
+/* 
+  This was my first attempt at obtaining large amounts of data. Now that I'm able to scrape pages
+  and I've proven that parallel techniques can be used with scraping, I was on the hunt got lots 
+  of data to scrape and process. However, I ran into problems. Finding static web pages with 
+  tons of data to scrape isn't really a thing. Nearly all (if not all) websites that have large amounts
+  of data, are dynamic webpages meaning that more data is loaded when it's demanded through a 
+  botton click or a scroll. What I found is that this goes beyond the capabilities of JSoup. So 
+  I got to work researching and found that you need a web driver in order to write code that clicks 
+  buttons for you. With more research, I came across selenium with chrome web driver. I spent 
+  considerable amounts of time downloading and trying to hook all of these softwares up. However, as 
+  you can see, my selenium web driver gets blocked each time this file is run. Ultimately, after talking 
+  with professor Kanat, it was decided that this wasn't a great rroute to be going, and that the web driver may be 
+  beyond the scope of this project so I stopped pursuing it.  
+ */
+
 object LargeScraper extends App{
   // Set the path to the ChromeDriver executable
   System.setProperty("webdriver.chrome.driver", "src/main/scala/chromedriver-mac-arm64/chromedriver")
@@ -21,7 +36,8 @@ object LargeScraper extends App{
   options.addArguments("--allowed-ips")
   val driver: WebDriver = new ChromeDriver()
 
-
+  //Trying a number of different websites with the webdriver to see if I can 
+  //Get any to connect. 
   //Go to this website:
 //  https://www.kaggle.com/datasets/nelgiriyewithana/most-streamed-spotify-songs-2024
 

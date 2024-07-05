@@ -1,4 +1,4 @@
-import SequentialRealatorScraper.{browser, htmlListingElement}
+import MoreSequentialScraping.{browser, htmlListingElement}
 
 import net.ruippeixotog.scalascraper.scraper.ContentExtractors.text
 import net.ruippeixotog.scalascraper.browser.JsoupBrowser
@@ -19,6 +19,12 @@ import com.google.common.util.concurrent.AtomicDouble
 import scalaz.Leibniz.subst
 import java.util.concurrent.ConcurrentLinkedQueue
 
+/*
+  After givinng up on scraping with a web driver, I came up with a new idea.
+  What if htere was a way to scrape multiple static pages instead of trying
+  to scrape a lot of data from one page. With this idea, I found a scaping friendly site
+  designed for learning and testing web scraping. It's called books.toscrape.com. 
+ */
 
 object booksToScrapeSequential extends App{
   case class Product(upc: String, prod_type: String, image: String, price: String)

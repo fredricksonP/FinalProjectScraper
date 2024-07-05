@@ -1,4 +1,4 @@
-import SequentialRealatorScraper.{browser, htmlListingElement}
+import MoreSequentialScraping.{browser, htmlListingElement}
 import net.ruippeixotog.scalascraper.scraper.ContentExtractors.text
 import net.ruippeixotog.scalascraper.browser.JsoupBrowser
 import net.ruippeixotog.scalascraper.dsl.DSL.*
