@@ -20,10 +20,15 @@ import scalaz.Leibniz.subst
 import java.util.concurrent.ConcurrentLinkedQueue
 
 /*
-  After givinng up on scraping with a web driver, I came up with a new idea.
-  What if htere was a way to scrape multiple static pages instead of trying
-  to scrape a lot of data from one page. With this idea, I found a scaping friendly site
-  designed for learning and testing web scraping. It's called books.toscrape.com. 
+  After giving up on scraping with a web driver, I came up with a new idea.
+  What if there was a way to scrape multiple static pages instead of trying
+  to scrape a lot of data from one page. With this idea, I found a scraping friendly site
+  designed for learning and testing web scraping. It's called bookstoscrape.com. This is 
+  an E-commerce web website that's like an online bookstore. I figured out that I could scrape all
+  of the different book pages and obtain various book data. To scrape all sites, I exported
+  all of the pages links to a csv file. Then, I read from the csv file and create connections to the 
+  various pages for scraping book data such as book title, price, and stock. This version is sequential, 
+  but the ultimate goal is to scrape all pages in parallel. 
  */
 
 object booksToScrapeSequential extends App{

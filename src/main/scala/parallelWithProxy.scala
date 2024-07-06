@@ -2,6 +2,13 @@ import scala.io.Source
 import net.ruippeixotog.scalascraper.browser.JsoupBrowser
 import net.ruippeixotog.scalascraper.model.Document
 
+/*
+  This file attempts to do the same parallel scraping, but then I attempt to reference book
+  prices on amazon. However, I've dicovered that amazon keeps blocking me becuase I either make
+  too many requests, or I request too fast. This file plays around with switching proxies so that
+  and connection delays so that I can try to prevent from being blocked by amazon.
+ */
+
 object parallelWithProxy extends App{
   //Following this Proxy tutorial for scala
   //https://proxiesapi.com/articles/scraping-without-headaches-using-scala-and-scalaj-http-with-proxy-servers

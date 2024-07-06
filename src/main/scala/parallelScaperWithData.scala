@@ -9,6 +9,12 @@ import net.ruippeixotog.scalascraper.dsl.DSL.Extract.*
 
 import scala.io.Source
 
+/*
+  This file scrapes the same sites as the booksToScrepSequentail file, but it scrapes the varoius
+  pages in parallel. I achieved some massive speedup by scraping the 1000 books to scrape pages in
+  parallel. Obviously runtimes depend on connectoins speed, but for example, I scarped the 1000 pages
+  sequentially in 299 seconds and in parallel, I scraped the pages in 39 seconds.
+ */
 
 //NOTES TO SELF
 /*
