@@ -9,6 +9,8 @@ import net.ruippeixotog.scalascraper.model.Document
   and connection delays so that I can try to prevent from being blocked by amazon.
  */
 
+//TODO: tonight, I'm still trying to figure out how to setup free proxies in scala. 
+//I think I will try to resort to youtube tonight since online tutorials have proven unsuccessful 
 object parallelWithProxy extends App{
   //Following this Proxy tutorial for scala
   //https://proxiesapi.com/articles/scraping-without-headaches-using-scala-and-scalaj-http-with-proxy-servers
