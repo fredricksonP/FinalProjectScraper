@@ -4,9 +4,15 @@ import concurrent.futures
 import time
 
 ##Testing rotating proxies 
-r = requests.get('https://httpbin.org/ip')
+proxy = '116.100.233.88:1007'
+r = requests.get('https://httpbin.org/ip', proxies={'http': proxy, 'https': proxy}, timeout=3)
+# r = requests.get('https://www.amazon.com/s?k=The+Coming+Woman%3A+A+Novel+Based+on+the+Life+of+the+Infamous+Feminist%2C+Victoria+Woodhull', proxies={'http': proxy, 'https': proxy}, timeout=3)
+# content = BS(r.content, 'html.parser')
+# bookTitle = content.find('span').text
+# print("\n" + bookTitle)
 print(r.status_code)
-print(r.json())
+
+# print(r.json())
 
 # Step 1: Send a GET request to the web page
 # url = 'https://en.wikipedia.org/wiki/Main_Page'
