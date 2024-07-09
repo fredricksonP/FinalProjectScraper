@@ -46,7 +46,7 @@ def get_rand_prox(proxies):
     return{"https" : choice(proxies)}
 def working_proxy():
     working = []
-    for i in range(100):
+    for i in range(40):
         proxy = get_rand_prox(proxies)
         print(f"using {proxy}...")
         try: 
