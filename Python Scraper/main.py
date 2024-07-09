@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup as BS
 import concurrent.futures
 import time
+from random import choice #allows me to select a random element from a list
 
 # This tutorial helped me get started with scraping in python
 # https://nanonets.com/blog/web-scraping-with-python-tutorial/
@@ -15,22 +16,51 @@ import time
 # print(soup.text)
 # URL of the webpage to scrape
 # URL of the page to scrape
-# URL of the raw text file containing the proxy list
-url = "https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list-raw.txt"
-response = requests.get(url) #connect to github
 
-# if req is successful
-if response.status_code == 200:
-    proxy_list_text = response.text
-    # Split text into lines
-    proxy_list_lines = proxy_list_text.splitlines()
+
+def get_proxies():
     
-    # print proxies
-    for proxy in proxy_list_lines:
-        print(proxy)
-# print error message if connectoin fails
-else:   
-    print(f"Failed to retrieve the proxy list. Status code: {response.status_code}")
+    # URL of the raw text file containing the proxy list
+    url = "https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list-raw.txt"
+    response = requests.get(url) #connect to github
+
+    # if req is successful
+    if response.status_code == 200:
+        proxy_list_text = response.text
+        # Split text into lines
+        proxy_list_lines = proxy_list_text.splitlines()
+        # print proxies
+        # for proxy in proxy_list_lines:
+        #     print(proxy)
+
+        # print(proxy_list_lines)
+        return proxy_list_lines
+    # print error message if connectoin fails
+    else:   
+        print(f"Failed to retrieve the proxy list. Status code: {response.status_code}")
+
+
+proxies = get_proxies()
+
+def get_rand_prox(proxies):
+    return{"https" : choice(proxies)}
+def working_proxy():
+    working = []
+    for i in range(100):
+        proxy = get_rand_prox(proxies)
+        print(f"using {proxy}...")
+        try: 
+            req = requests.get("https://www.amazon.com", proxies=proxy, timeout=3)
+            print(req.status_code)
+            if req.status_code == 200:
+                working.append(proxy)
+        except: 
+            print("failed")
+            pass
+    return working
+
+working = working_proxy()
+print(working)    
 
 # if r.status_code == 200:
 #     # Parse the HTML content using BeautifulSoup
