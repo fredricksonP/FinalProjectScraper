@@ -19,12 +19,12 @@ def check_proxies():
     while not q.empty():
         proxy = q.get()
         try: 
-            res = requests.get("https://www.amazon.com/", proxies={"http": proxy, "https": proxy})
             print("checking " + proxy + "...")
+            res = requests.get("https://www.amazon.com/", proxies={"http": proxy, "https": proxy}, timeout=3)
         except: 
             continue
         if res.status_code == 200:
-            print(proxy)
+            print("SUCCESS:" + proxy)
 
 for t in range(10):
     threading.Thread(target=check_proxies).start()
