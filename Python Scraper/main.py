@@ -62,32 +62,6 @@ def working_proxy():
 working = working_proxy()
 print(working)    
 
-# if r.status_code == 200:
-#     # Parse the HTML content using BeautifulSoup
-#     soup = BS(r.content, 'html.parser')
-    
-#     # Find the textarea element by its id
-#     textarea = soup.find('textarea', id='read-only-cursor-text-area')
-    
-#     # Extract the text content from the textarea
-#     if textarea:
-#         data = textarea.get_text()
-#         print("Scraped data:\n", data)
-#     else:
-#         print("Textarea element not found.")
-
-
-##Testing rotating proxies 
-# proxy = '116.100.233.88:1007'
-# r = requests.get('https://httpbin.org/ip', proxies={'http': proxy, 'https': proxy}, timeout=3)
-# r = requests.get('https://www.amazon.com/s?k=The+Coming+Woman%3A+A+Novel+Based+on+the+Life+of+the+Infamous+Feminist%2C+Victoria+Woodhull', proxies={'http': proxy, 'https': proxy}, timeout=3)
-# content = BS(r.content, 'html.parser')
-# bookTitle = content.find('span').text
-# print("\n" + bookTitle)
-# print(r.status_code)
-
-# print(r.json())
-
 # Step 1: Send a GET request to the web page
 # url = 'https://en.wikipedia.org/wiki/Main_Page'
 # response = requests.get(url)
@@ -121,8 +95,8 @@ def get_book_data(url):
 
 start_time = time.time()
 
-# with concurrent.futures.ThreadPoolExecutor() as ex:
-#     ex.map(get_book_data, listOfUrls)
+with concurrent.futures.ThreadPoolExecutor() as ex:
+    ex.map(get_book_data, listOfUrls)
 
 end_time = time.time()
 
