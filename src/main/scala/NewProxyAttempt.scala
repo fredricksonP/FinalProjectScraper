@@ -1,42 +1,35 @@
-//import NewProxyAttempt.doc
-//
-//import scala.io.Source
-//import net.ruippeixotog.scalascraper.browser.JsoupBrowser
-//import net.ruippeixotog.scalascraper.model.Document
-//import org.jsoup.Jsoup
-//import java.net.{InetSocketAddress, Proxy}
-
 import org.jsoup.Jsoup
-import org.jsoup.nodes.Document
+import org.jsoup.nodes.{Document => JsoupDocument}
 import java.net.{InetSocketAddress, Proxy}
 import net.ruippeixotog.scalascraper.browser.JsoupBrowser
-import net.ruippeixotog.scalascraper.model.Document
+import net.ruippeixotog.scalascraper.model.{Document => ScraperDocument}
 
 
-object NewProxyAttempt {
+
+object NewProxyAttempt extends App {
   System.setProperty("http.proxyHost", "192.168.5.1")
   System.setProperty("http.proxyPort", "1080")
 
-  val proxyHost = "192.168.5.1"
-  val proxyPort = 1080
+  val proxyHost = "85.209.153.174"
+  val proxyPort = 999
 
   // Create a proxy instance
   val proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyHost, proxyPort))
 
-  val url = "http://example.com"
+  val url = "http://books.toscrape.com/catalogue/category/books_1/index.html"
 
   // Connect to the URL using Jsoup and fetch the document with the proxy
-  val jsoupDoc: Document = Jsoup.connect(url)
+  val jsoupDoc: JsoupDocument = Jsoup.connect(url)
     .proxy(proxy)
     .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
     .get()
 
   // Convert Jsoup Document to scala-scraper Document
   val browser = JsoupBrowser()
-  val scraperDoc: Document = browser.parseInput(jsoupDoc.html(), url)
-
+  val scraperDoc: ScraperDocument = browser.parseString(jsoupDoc.html())
+  
   // Print the document title to verify the connection
-  println(scraperDoc.title)
+  println(scraperDoc)
 
   // Connect to the URL using Jsoup and fetch the document
 //  val doc: Document = Jsoup.connect("http://www.google.com").get()
@@ -46,7 +39,7 @@ object NewProxyAttempt {
 //  val doc = Jsoup.connect(url)
 //    .proxy("http.proxyHost", "192.168.5.1")
 //    .get();
-  
+
   //  val connection = Jsoup.connect(url).userAgent("Bot")
 
 
