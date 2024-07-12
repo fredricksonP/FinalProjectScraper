@@ -7,16 +7,19 @@ import net.ruippeixotog.scalascraper.model.{Document => ScraperDocument}
 
 
 object NewProxyAttempt extends App {
-  System.setProperty("http.proxyHost", "192.168.5.1")
-  System.setProperty("http.proxyPort", "1080")
+//  System.setProperty("http.proxyHost", "192.168.5.1")
+//  System.setProperty("http.proxyPort", "1080")
 
+  //Setting the Proxy I want to use.
   val proxyHost = "85.209.153.174"
   val proxyPort = 999
 
   // Create a proxy instance
   val proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyHost, proxyPort))
 
-  val url = "http://books.toscrape.com/catalogue/category/books_1/index.html"
+//  val url = "http://books.toscrape.com/catalogue/category/books_1/index.html"
+
+  val url = "https://www.scrapingcourse.com/ecommerce/"
 
   // Connect to the URL using Jsoup and fetch the document with the proxy
   val jsoupDoc: JsoupDocument = Jsoup.connect(url)
