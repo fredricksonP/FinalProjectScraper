@@ -21,18 +21,40 @@ object NewProxyAttempt extends App {
 
   val url = "https://www.scrapingcourse.com/ecommerce/"
 
-  // Connect to the URL using Jsoup and fetch the document with the proxy
-  val jsoupDoc: JsoupDocument = Jsoup.connect(url)
-    .proxy(proxy)
-    .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
-    .get()
+  try {
+    val response = Jsoup.connect(url)
+      .proxy(proxy)
+      .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
+      .execute()
 
-  // Convert Jsoup Document to scala-scraper Document
-  val browser = JsoupBrowser()
-  val scraperDoc: ScraperDocument = browser.parseString(jsoupDoc.html())
-  
-  // Print the document title to verify the connection
-  println(scraperDoc)
+    val statusCode = response.statusCode()
+    val body = response.body()
+
+    println(s"Status Code: $statusCode")
+    println(s"Response Body: $body")
+
+    if (statusCode == 403 || body.contains("blocked") || body.contains("captcha")) {
+      println("The site might be blocking requests from proxies.")
+    } else {
+      println("The site is accessible through the proxy.")
+    }
+  } catch {
+    case e: Exception => println(s"Error: ${e.getMessage}")
+  }
+}
+
+  // Connect to the URL using Jsoup and fetch the document with the proxy
+//  val jsoupDoc: JsoupDocument = Jsoup.connect(url)
+//    .proxy(proxy)
+//    .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
+//    .get()
+//
+//  // Convert Jsoup Document to scala-scraper Document
+//  val browser = JsoupBrowser()
+//  val scraperDoc: ScraperDocument = browser.parseString(jsoupDoc.html())
+//
+//  // Print the document title to verify the connection
+//  println(scraperDoc)
 
   // Connect to the URL using Jsoup and fetch the document
 //  val doc: Document = Jsoup.connect("http://www.google.com").get()
@@ -46,4 +68,3 @@ object NewProxyAttempt extends App {
   //  val connection = Jsoup.connect(url).userAgent("Bot")
 
 
-}
