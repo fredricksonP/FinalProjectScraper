@@ -2,38 +2,37 @@ import net.ruippeixotog.scalascraper.browser.JsoupBrowser
 import net.ruippeixotog.scalascraper.scraper.ContentExtractors.text
 import net.ruippeixotog.scalascraper.dsl.DSL.*
 import net.ruippeixotog.scalascraper.dsl.DSL.Extract.*
+import org.jsoup.Jsoup
 
 import scala.io.Source
+import net.ruippeixotog.scalascraper.browser.JsoupBrowser
 
-/*
-  After giving up on scraping with a web driver, I came up with a new idea.
-  What if there was a way to scrape multiple static pages instead of trying
-  to scrape a lot of data from one page. With this idea, I found a scraping friendly site
-  designed for learning and testing web scraping. It's called bookstoscrape.com. This is 
-  an E-commerce web website that's like an online bookstore. I figured out that I could scrape all
-  of the different book pages and obtain various book data. To scrape all sites, I exported
-  all of the pages links to a csv file. Then, I read from the csv file and create connections to the 
-  various pages for scraping book data such as book title, price, and stock. This version is sequential, 
-  but the ultimate goal is to scrape all pages in parallel. 
- */
 
-object booksToScrapeSequential extends App{
+object booksSequentialOpenConn extends App{
   case class Product(upc: String, prod_type: String, image: String, price: String)
 
   var allPrices = Vector()
-//TODO: Calc average price
-//TODO: Keep track of availability
-//TODO: Make methods to get low stock, medium stock and high stock
+  //TODO: Calc average price
+  //TODO: Keep track of availability
+  //TODO: Make methods to get low stock, medium stock and high stock
 
   //File path containing the 1000 links to books
   val filePath = "src/main/scala/bookslinks.csv"
+
+  //Make a new jsoup session
+  val browser = JsoupBrowser()
+
+  // Get a session to maintain cookies and keep the session open for all requests
+//  val session = browser.newSession()
 
   def fetchPage(url: String) = {
     try {
       val newBrowser = JsoupBrowser()
       println(s"Fetching page: $url")
-      val doc = newBrowser.get(url)
-      val bookTitle = doc  >> text("h1")
+//      val doc = newBrowser.get(url)
+      val doc = browser.get(url)
+
+      val bookTitle = doc >> text("h1")
       val bookPrice = doc >> element(".price_color")
       val bookPriceParsed = bookPrice.text
       val bookPriceDouble = bookPriceParsed.drop(1)
@@ -43,9 +42,9 @@ object booksToScrapeSequential extends App{
       val rowIndex = 2 // For example, to get the third row (index starts at 0)
 
 
-//      highestPrice.cmp(rows(2).toString.drop(1).toDouble)
+      //      highestPrice.cmp(rows(2).toString.drop(1).toDouble)
       println(s"Adding price: ${bookPriceParsed}")
-//      pricesQueue.add(bookPriceParsed)
+      //      pricesQueue.add(bookPriceParsed)
       println(s"Added price: ${bookPriceParsed}")
 
 
@@ -84,5 +83,6 @@ object booksToScrapeSequential extends App{
   // Calculate the duration
   val durationInSeconds = (endTime - startTime) / 1e9
   println(s"Time taken: $durationInSeconds seconds")
+
 
 }
