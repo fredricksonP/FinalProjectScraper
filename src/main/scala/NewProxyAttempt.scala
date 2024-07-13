@@ -3,20 +3,25 @@ import org.jsoup.nodes.{Document => JsoupDocument}
 import java.net.{InetSocketAddress, Proxy}
 import net.ruippeixotog.scalascraper.browser.JsoupBrowser
 import net.ruippeixotog.scalascraper.model.{Document => ScraperDocument}
+import net.ruippeixotog.scalascraper.dsl.DSL.Extract.*
+import net.ruippeixotog.scalascraper.dsl.DSL.*
+import net.ruippeixotog.scalascraper.scraper.ContentExtractors.text
 
 
 object NewProxyAttempt extends App {
 
   //Setting the Proxy I want to use.
-  val proxyHost = "85.209.153.174"
-  val proxyPort = 999
+  val proxyHost = "185.105.91.62"
+  val proxyPort = 4444
 
   // Create a proxy instance
   val proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyHost, proxyPort))
 
-  val url = "http://books.toscrape.com/catalogue/category/books_1/index.html"
+//  val url = "http://books.toscrape.com/catalogue/category/books_1/index.html"
 
-//  val url = "http://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html"
+  val url = "https://httpbin.org/ip"
+
+  val browser = JsoupBrowser()
 
   //Try catch block to catch if the connection or the proxy fails.
   try {
@@ -29,6 +34,24 @@ object NewProxyAttempt extends App {
     val statusCode = response.statusCode()
     val body = response.body()
     val parsed = response.parse()
+
+    val doc = browser.parseString(response.body())
+
+    // Extract data using scalascraper
+    val bookTitle = doc >> text("h1")
+    val bookPrice = doc >> element(".price_color")
+    val bookPriceParsed = bookPrice.text
+    val bookPriceDouble = bookPriceParsed.drop(1).toDouble
+
+    val table = doc >> element("tbody") // Select the tbody element
+    val rows = (table >> elements("tr") >> elements("td")).toVector // Select all rows in the tbody
+
+    println(s"Adding price: $bookPriceParsed")
+    println(s"Added price: $bookPriceParsed")
+    println("Title: " + bookTitle)
+    println("Price: " + bookPriceParsed)
+
+
     println(s"Status Code: $statusCode")
     println(s"Response Body: $parsed")
 
