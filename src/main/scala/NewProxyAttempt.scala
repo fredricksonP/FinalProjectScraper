@@ -23,9 +23,6 @@ object NewProxyAttempt extends App {
 
   val browser = JsoupBrowser()
 
-  val secBrow = JsoupBrowser()
-  sec
-
   //Try catch block to catch if the connection or the proxy fails.
   try {
     val response = Jsoup.connect(url)

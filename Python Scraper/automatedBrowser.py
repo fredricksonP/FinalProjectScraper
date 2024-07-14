@@ -23,4 +23,9 @@ for link in links:
         break
      
 
- 
+book_links = driver.find_elements("xpath", 
+                                "//div[contains(@class, 'elementor-column-wrap)][//h2[text()[contains(., '7 IN 1')]]][count(.//a)=2]//a")
+
+
+for link in book_links:
+    print(link.get_attribute("href"))
