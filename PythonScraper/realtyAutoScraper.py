@@ -6,6 +6,8 @@ from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 import time
 from bs4 import BeautifulSoup
+import re #for cleaning the price string
+
 
 #Specify our expiremental options to connect to sites
 my_options = Options()
@@ -16,6 +18,8 @@ driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), opti
 #connect to the page with all of the available properties in the Bangkok location
 driver.get("https://www.fivestars-thailand.com/en/sale/bangkok")
 driver.maximize_window()
+
+CONVERSION_RATE = 0.02766
 
 
 for i in range(1, 2):
@@ -43,11 +47,20 @@ for p in properties:
     price_elem = p.find('div', class_='property-block-bottom__').find_all('p')[2] if p.find('div', class_='property-block-bottom__') else None
     price = price_elem.get_text(strip=True) if price_elem else 'N/A'
 
+    #TODO: Convert Thai baht to usd here
+    cleaned = re.sub(r'\D', '', price)
+
+    # Convert to integer
+    priceInt = int(cleaned)
+    # print(priceInt)
+    usd = int(cleaned) * CONVERSION_RATE
+
     rooms_elem = p.find('p', class_='property-block-bottom__beds')
     rooms = rooms_elem.get_text(strip=True) if rooms_elem else 'N/A'
     
     print(f"Title: {title}")
-    print(f"Price: {price}")
+    print(f"Price THB: {price}")
+    print(f"Price USD: ${usd}USD")
     print(f"Rooms: {rooms}")
     print('---')
 
