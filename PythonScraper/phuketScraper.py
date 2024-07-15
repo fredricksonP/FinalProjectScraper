@@ -14,10 +14,10 @@ my_options.add_experimental_option("detach", True)
 #Connect to target site with the chrome driver
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=my_options )
 #connect to the page with all of the available properties in the Bangkok location
-driver.get("https://www.fivestars-thailand.com/en/sale/bangkok")
+driver.get("https://www.fivestars-thailand.com/en/sale/phuket")
 driver.maximize_window()
 
-print("hello from python")
+print("hello from phuket python")
 
 for i in range(1, 10):
     # Locate the button using its id
