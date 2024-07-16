@@ -11,7 +11,7 @@ import net.ruippeixotog.scalascraper.model.Document
 
 import scala.io.Source
 
-object booksToScrapeParalleln extends App {
+object booksToScrapeParallel extends App {
   //open the csv file of all links to books to scrape
   // Specify the path to your file
   val filePath = "src/main/scala/bookslinks.csv"

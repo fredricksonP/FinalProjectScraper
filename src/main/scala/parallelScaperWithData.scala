@@ -22,9 +22,10 @@ import scala.io.Source
   you have to add a period berfore the div class name ex -> element(".sg-col-inner")
  */
 
-object parallelScaperWithData extends App {
+object parallelScaperWithData {
   implicit val ec: ExecutionContext = ExecutionContext.global
   case class Book(title: String, price: Double, stock: Int, url: String)
+
   case class FinalResults(averageBookPrice: Double, maxBookPrice: Double, lowStockCount: Int, medStockCount: Int, HighStockCount: Int)
 
   //A random wait timer to space out requests to amazon
@@ -73,9 +74,10 @@ object parallelScaperWithData extends App {
       val bookTitle = doc  >> text("h1")
 
       //As soon as I get a title I will search amazon
-      println("before here")
-      findBookOnAmazon(bookTitle);
-      println("After here")
+      //Following code is commented out because amazon eventually blocks scraping
+//      println("before here")
+//      findBookOnAmazon(bookTitle);
+//      println("After here")
 
       val bookPrice = doc >> element(".price_color")
       val bookPriceParsed = bookPrice.text
@@ -105,51 +107,84 @@ object parallelScaperWithData extends App {
     }
   }
 
-  val filePath = "src/main/scala/bookslinks.csv"
-  // Open the file
-  val bufferedSource = Source.fromFile(filePath)
+  def runLogic(): Unit = {
+    val filePath = "src/main/scala/bookslinks.csv"
+    // Open the file
+    val bufferedSource = Source.fromFile(filePath)
 
-  // Get the start time
-  val startTime = System.nanoTime()
+    // Get the start time
+    val startTime = System.nanoTime()
 
 
-  val urls = bufferedSource.getLines().toList
-  val fetchFutures = urls.map(fetchPage)
+    val urls = bufferedSource.getLines().toList
+    val fetchFutures = urls.map(fetchPage)
 
-  val allPagesFuture = Future.sequence(fetchFutures)
+    val allPagesFuture = Future.sequence(fetchFutures)
 
-  val maxPriceFuture = allPagesFuture.map { books =>
-    books.maxBy(_.price)
+    val maxPriceFuture = allPagesFuture.map { books =>
+      books.maxBy(_.price)
+    }
+
+    // Calculate max price and total price on complete
+//    allPagesFuture.onComplete {
+//      case Success(books) =>
+//        val maxPriceBook = books.maxBy(_.price)
+//        val totalPrice = books.map(_.price).sum
+//        val avgPrice = totalPrice / books.length
+//        val totalStock = books.map(_.stock).sum
+//        val avgStock = totalStock / books.length
+//
+//        val lowStock = books.filter(_.stock < 4);
+//        val medStock = books.filter(x => x.stock > 4 && x.stock < 8 );
+//        val highStock = books.filter(_.stock > 12);
+//
+//
+//
+//        println(s"The book with the highest price is: ${maxPriceBook.title} at $$${maxPriceBook.price}, URL: ${maxPriceBook.url}")
+//        println(s"The average price of all books is: ${avgPrice}")
+//        println(s"The average stock for books is: ${avgStock}")
+//        println(s"There are ${lowStock} low stock titles")
+//        println(s"There are ${medStock} medium stock titles")
+//        println(s"There are ${highStock} high stock titles")
+//
+//      case Failure(ex) =>
+//        println(s"Failed to fetch and process pages. Error: ${ex.getMessage}")
+//    }
+
+    val maxPriceBook = Await.result(maxPriceFuture, Duration.Inf)
+    val books = Await.result(allPagesFuture, Duration.Inf)
+
+    val maxPrice = books.maxBy(_.price)
+    val totalPrice = books.map(_.price).sum
+    val avgPrice = totalPrice / books.length
+    val totalStock = books.map(_.stock).sum
+    val avgStock = totalStock / books.length
+
+    val lowStock = books.count(_.stock < 4);
+    val medStock = books.count(x => x.stock > 4 && x.stock < 8);
+    val highStock = books.count(_.stock > 12);
+
+    //Print statistics and results
+    println("_________________________________________________________________________________")
+    println(s"The book with the highest price is: ${maxPrice.title} at $$${maxPrice.price}, URL: ${maxPrice.url}")
+    println(s"The average price of all books is: ${avgPrice}")
+    println(s"The average stock for books is: ${avgStock}")
+    println(s"There are ${lowStock} low stock titles")
+    println(s"There are ${medStock} medium stock titles")
+    println(s"There are ${highStock} high stock titles")
+    println("_________________________________________________________________________________")
+
+    // Get the end time
+    val endTime = System.nanoTime()
+
+    // Calculate the duration
+    val durationInSeconds = (endTime - startTime) / 1e9
+    println(s"Time taken: $durationInSeconds seconds")
+
+    bufferedSource.close() // Close the file reading
   }
 
-  // Calculate max price and total price on complete
-  allPagesFuture.onComplete {
-    case Success(books) =>
-      val maxPriceBook = books.maxBy(_.price)
-      val totalPrice = books.map(_.price).sum
-      val avgPrice = totalPrice / books.length
-      val totalStock = books.map(_.stock).sum
-      val avgStock = totalStock / books.length
-
-      println(s"The book with the highest price is: ${maxPriceBook.title} at $$${maxPriceBook.price}, URL: ${maxPriceBook.url}")
-      println(s"The average price of all books is: ${avgPrice}")
-      println(s"The average stock for books is: ${avgStock}")
-
-    case Failure(ex) =>
-      println(s"Failed to fetch and process pages. Error: ${ex.getMessage}")
+  def main(args: Array[String]): Unit = {
+    runLogic();
   }
-
-  val maxPriceBook = Await.result(maxPriceFuture, Duration.Inf)
-
-  // Wait for all scraping to complete
-//  Await.result(scrapeFutures, Duration.Inf)
-
-  // Get the end time
-  val endTime = System.nanoTime()
-
-  // Calculate the duration
-  val durationInSeconds = (endTime - startTime) / 1e9
-  println(s"Time taken: $durationInSeconds seconds")
-
-  bufferedSource.close()  // Close the file reading
 }
