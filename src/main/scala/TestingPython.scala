@@ -34,4 +34,6 @@ object TestingPython extends App {
 //      println(s"Python script execution failed with exit code $exitCode.")
 //    }
     val result = Await.result(phuketRealty, Duration.Inf)
+    val _ = Await.result(bankgkokRealty, Duration.Inf)
+    
 }
