@@ -3,23 +3,24 @@ import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.util.{Failure, Success}
 import scala.concurrent.duration.Duration
 
-object TestingPython extends App {
+object AllSolutionsParallel extends App {
   // Path to the Python script
   implicit val ec: ExecutionContext = ExecutionContext.global
 
   //Function to start python scripts as futures so they can be run in parallel
   def pythonScriptFuture(scriptPath: String): Future[Int] = Future {
-    val pythonVenvPath = "PythonScraper/venv/bin/python" // Update with the correct path
-//    val scriptPath = "PythonScraper/realtyAutoScraper.py" // Update with the absolute path to your Python script
+    //Environment path
+    val pythonVenvPath = "PythonScraper/venv/bin/python" 
     val command = s"$pythonVenvPath $scriptPath"
     val exitCode = command.!
     exitCode
   }
 
   //Old sequential soloution below
-//  val pythonVenvPath = "PythonScraper/venv" // Update with the absolute path to your virtual environment's Python interpreter
-//  val pythonVenvPath = "PythonScraper/venv/bin/python" // Update with the correct path
-//  val scriptPath = "PythonScraper/realtyAutoScraper.py" // Update with the absolute path to your Python script
+  
+//  val pythonVenvPath = "PythonScraper/venv" 
+//  val pythonVenvPath = "PythonScraper/venv/bin/python" 
+//  val scriptPath = "PythonScraper/realtyAutoScraper.py" 
 //  val command = s"$pythonVenvPath $scriptPath"
 //    val exitCode = command.!
   // Check the exit code

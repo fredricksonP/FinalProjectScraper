@@ -155,6 +155,7 @@ object parallelScaperWithData {
     val books = Await.result(allPagesFuture, Duration.Inf)
 
     val maxPrice = books.maxBy(_.price)
+    val minPrice = books.minBy(_.price)
     val totalPrice = books.map(_.price).sum
     val avgPrice = totalPrice / books.length
     val totalStock = books.map(_.stock).sum
@@ -167,6 +168,7 @@ object parallelScaperWithData {
     //Print statistics and results
     println("_________________________________________________________________________________")
     println(s"The book with the highest price is: ${maxPrice.title} at $$${maxPrice.price}, URL: ${maxPrice.url}")
+    println(s"The book with the lowest price is: ${minPrice.title} at $$${minPrice.price}, URL: ${minPrice.url}")
     println(s"The average price of all books is: ${avgPrice}")
     println(s"The average stock for books is: ${avgStock}")
     println(s"There are ${lowStock} low stock titles")

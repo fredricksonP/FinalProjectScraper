@@ -1,5 +1,8 @@
 # This is a headless browser scraper that scrapes https://www.fivestars-thailand.com/en/sale/bangkok
-#for property prices. 
+# for property prices. Selenium is also used here to dynamically load content on the website
+# Once the content is loaded, beautiful soup is used to scrape the target content
+# This code introduces purposeful optimized timeouts to give dynamic content time
+# to load. This file scrapes realty listing from phuket. 
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
@@ -72,15 +75,15 @@ for p in properties:
     all_properties.append(newProp)
 
 
-driver.quit()
-# print("\n\n\nProperties Found: ")
-# print(all_properties)
+driver.quit() #closes the seleium web driver window
 
+#Calculate target stats
 max_rooms = max(all_properties, key=lambda x: x.rooms)
 max_price = max(all_properties, key=lambda x: x.usd_price)
 min_price = min(all_properties, key=lambda x: x.usd_price)
 avg_price = sum(property.usd_price for property in all_properties) / len(all_properties)
 
+#Output stats to the consol
 print(f"Aggregate statistics scraped from {len(all_properties)} listings in Phuket: ")
 print(f"Max Room Size: {max_rooms.rooms}")
 print(f"Max price: {max_price.usd_price}")
