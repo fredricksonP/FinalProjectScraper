@@ -26,7 +26,7 @@ import scala.jdk.CollectionConverters._
   beyond the scope of this project so I stopped pursuing it.  
  */
 
-object LargeScraper extends App{
+object scalaWebDriverAttempt extends App{
   // Set the path to the ChromeDriver executable
   System.setProperty("webdriver.chrome.driver", "src/main/scala/chromedriver-mac-arm64/chromedriver")
 

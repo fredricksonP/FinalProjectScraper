@@ -8,7 +8,7 @@ import net.ruippeixotog.scalascraper.dsl.DSL.*
 import net.ruippeixotog.scalascraper.scraper.ContentExtractors.text
 
 
-object NewProxyAttempt extends App {
+object successfulyChangeProxy extends App {
 
   //Setting the Proxy I want to use.
   val proxyHost = "185.105.91.62"

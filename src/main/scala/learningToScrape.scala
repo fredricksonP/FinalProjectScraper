@@ -17,7 +17,7 @@ import net.ruippeixotog.scalascraper.dsl.DSL.Parse._
  */
 
 
-object SequentialScraper extends App {
+object learningToScrape extends App {
   //Defining a structure to hold the scraped data
   case class Product(name: String, url: String, image: String, price: String)
 
