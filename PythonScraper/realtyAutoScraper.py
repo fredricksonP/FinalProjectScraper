@@ -90,10 +90,10 @@ max_price = max(all_properties, key=lambda x: x.usd_price)
 min_price = min(all_properties, key=lambda x: x.usd_price)
 avg_price = sum(property.usd_price for property in all_properties) / len(all_properties)
 
-#output stats to the consol
+#Output stats to the consol
 print(f"Aggregate statistics scraped from {len(all_properties)} listings in Bankok: ")
-print(f"Max Room Size: {max_rooms.rooms}")
-print(f"Max price: {max_price.usd_price}")
-print(f"Min price: {min_price.usd_price}")
-print(f"Avg price: {avg_price}")
+print(f"Max number of rooms: {max_rooms.rooms}")
+print(f"Max price in USD: ${max_price.usd_price}")
+print(f"Min price in USD: ${min_price.usd_price}")
+print(f"Avg price in USD: ${avg_price}")
 print("--------------------------------------------")

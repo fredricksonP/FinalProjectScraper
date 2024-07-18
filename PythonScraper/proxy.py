@@ -1,7 +1,7 @@
 import threading
 import concurrent.futures
 import requests
-
+import time
 # This file calls an API for proxyscrape.com which returns a list of free
 # proxies (stored in a txt file) that's updated every five minutes from the website. However, 
 # as I've come to learn, most free proxies don't work. So this code checks the 
@@ -38,6 +38,8 @@ if proxies_response.status_code == 200:
     with open("potential_proxies.txt", "w") as in_file:
         in_file.write(file_text)
 
+# Start the timer
+start_time = time.time()
 
 #Open the list of free proxies and use concurrent futures
 # to Check the proxies in parallel
@@ -49,3 +51,9 @@ with open("http_proxies.txt", "r") as f:
     with concurrent.futures.ThreadPoolExecutor() as ex:
         ex.map(check_proxies, proxies)
 
+# End the timer
+end_time = time.time()
+
+# Calculate and print the elapsed time
+elapsed_time = end_time - start_time
+print(f"Time taken to check all proxies: {elapsed_time:.2f} seconds")

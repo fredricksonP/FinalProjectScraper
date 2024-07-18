@@ -39,8 +39,6 @@ object parallelScaperWithData {
 
 
   def findBookOnAmazon(bookTitle: String): Unit = {
-    //TODO: If I can finally add all functionality, then filter out bogus $0.0 pieces
-
     //Found this helpful method to replace parts of a string: https://www.geeksforgeeks.org/scala-string-replace-method-with-example/
     val convTitleToSearch = bookTitle.replace(" ", "+")
     println("\n\n\n Found Target Book")
@@ -68,7 +66,8 @@ object parallelScaperWithData {
   def fetchPage(url: String): Future[Book] = Future {
     try {
       val newBrowser = JsoupBrowser()
-      println(s"Fetching page: $url") //Update console to show which page is being scraped
+      //TODO: COMMENT AND UNCOMMENT AS NECESSARY
+//      println(s"Fetching page: $url") //Update console to show which page is being scraped
       val doc = newBrowser.get(url) //Establish jsoup connection
 
       val bookTitle = doc  >> text("h1")

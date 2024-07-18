@@ -39,7 +39,7 @@ all_properties: list[PropertyListing] = []
 #loop to load now pages of dynamic content by clicking show more. 
 for i in range(1, 8):
     # Locate the button using its id
-    print("loaded more Phuket content: " + str(i))
+    # print("loaded more Phuket content: " + str(i))
     view_more_button = driver.find_element("id", "show-more")
     # Click the button
     view_more_button.click()
@@ -73,7 +73,7 @@ for p in properties:
     # print(f"Price USD: ${usd}USD")
     # print(f"Rooms: {rooms}")
     # print('---')
-    
+
     newProp = PropertyListing(title, price, usd, rooms)
     all_properties.append(newProp)
 
@@ -88,8 +88,8 @@ avg_price = sum(property.usd_price for property in all_properties) / len(all_pro
 
 #Output stats to the consol
 print(f"Aggregate statistics scraped from {len(all_properties)} listings in Phuket: ")
-print(f"Max Room Size: {max_rooms.rooms}")
-print(f"Max price: {max_price.usd_price}")
-print(f"Min price: {min_price.usd_price}")
-print(f"Avg price: {avg_price}")
+print(f"Max number of rooms: {max_rooms.rooms}")
+print(f"Max price in USD: ${max_price.usd_price}")
+print(f"Min price in USD: ${min_price.usd_price}")
+print(f"Avg price in USD: ${avg_price}")
 print("--------------------------------------------")

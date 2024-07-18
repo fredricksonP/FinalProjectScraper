@@ -8,3 +8,7 @@ or
 
 pip3 install selenium
 pip3 install webdrive-manager
+
+Do install all the packages and dependencies for running all python code, 
+you should just be to run "$pip install -r requirements.txt" inside the directory
+of this project.

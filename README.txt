@@ -10,10 +10,11 @@ src/main/scala file folder.
 Note that occasionally Selenium Web Driver will just fail to run. In this case rerun the code. 
 
 
-To run this code, you will need selenium downloaded on your computer.
-Also, you will need the latest version of chrome 126.0.6478.115 and you will need to properly download
-the chrome web driver for the selenium automation to work.
-Follow this video for web browser selenium web driver download:
-https://www.youtube.com/watch?v=jglQpvPI58A
+For the Python code, I've made a python virtual environment. This should make it easier to run the code because requirements for library downloads and packages are specified in the requirements.txt. 
+I also tried to code everything in python such that the least amount of packages will be needed for it to be run on another Computer. After cloning the repo, I think all you should need to do is activate the python
+Virtual environment. This can be done in the terminal by navigating to the project directory and typing 
+"$ .\venv\Scripts\activate" to activate in windows and "$ source venv/bin/activate" if you are on Mac. Afterwards, install the requirements for the project with pip and the following command: 
+"$pip install -r requirements.txt"
 
-Or go to this page: https://googlechromelabs.github.io/chrome-for-testing/#stable
+
+
