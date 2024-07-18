@@ -37,7 +37,9 @@ object parallelScaperWithData {
     println("Done waiting!")
   }
 
-
+//This function currently isn't in use because amazon kept blcoking me, but it was used
+//for referening book prices from books.toscrape to amazon. You can seee that I also played around with
+//timeouts in this function to avoid getting blocked. 
   def findBookOnAmazon(bookTitle: String): Unit = {
     //Found this helpful method to replace parts of a string: https://www.geeksforgeeks.org/scala-string-replace-method-with-example/
     val convTitleToSearch = bookTitle.replace(" ", "+")

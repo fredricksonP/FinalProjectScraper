@@ -43,7 +43,7 @@ for i in range(1, 8):
     view_more_button = driver.find_element("id", "show-more")
     # Click the button
     view_more_button.click()
-    time.sleep(3) #Introduce a purposeful delay to allow data load
+    time.sleep(4) #Introduce a purposeful delay to allow data load
 
 #Now that a bunch of content it loaded, connect to the page with beautiful soup 
 page_source = driver.page_source

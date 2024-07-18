@@ -9,6 +9,12 @@
 //@js.native @JSImport("/javascript.svg", JSImport.Default)
 //val javascriptLogo: String = js.native
 //
+
+/*
+This was a failed file that was supposed to somehow help use selenium with scala and attatching it
+to a package. Long story short is was a failure and I left the code in just to show some of my
+failures and show that there was lots of time put into the project to obtain successes.
+ */
 //@main
 //def LiveChart(): Unit =
 //  dom.document.querySelector("#app").innerHTML = s"""

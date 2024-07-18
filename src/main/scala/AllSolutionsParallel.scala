@@ -30,18 +30,23 @@ object AllSolutionsParallel extends App {
   //      println(s"Python script execution failed with exit code $exitCode.")
   //    }
 
-    //Specify file paths
+    //Specify file paths to python code so that the scripts can be started as futures
     val startTime = System.nanoTime()
     val bankgkokRealty = pythonScriptFuture("PythonScraper/realtyAutoScraper.py")
     val phuketRealty = pythonScriptFuture("PythonScraper/phuketScraper.py")
 
+    //Start the books to scrape parallel code (scala) as future so that that 
+    // it can be run at the same time as the python webdrivers
     val futureBooks: Future[Unit] = Future {
       parallelScaperWithData.runLogic()
     }
-
+  
+    //Await the reult of all futures
     val result = Await.result(phuketRealty, Duration.Inf)
     val _ = Await.result(bankgkokRealty, Duration.Inf)
     val _ = Await.result(futureBooks, Duration.Inf)
+    
+    //Showing quantifiable results by printing out time taken.
     val endTime = System.nanoTime()
     val durationInSeconds = (endTime - startTime) / 1e9
     println(s"Time taken for 3 functions: $durationInSeconds seconds")
