@@ -4,22 +4,22 @@ import concurrent.futures
 import time
 from random import choice #allows me to select a random element from a list
 
+# This file was all about practicing using free proxies, and how to rotate proxies. 
+# The file code connects to a free repository of proxies on github and scrapes
+# the proxies from the page. Then a proxy is chosen at random and a connection
+# to Amazon is attempted. This file is a great example of how I would rotate proxies
+# in the future if I were using more reliable paid for proxies. However, as I've come
+# to find out, free proxies are largely useless becuase they either don't work 
+# (can't connect to any site), or if they do work, they can't connect to a reputable 
+# website with security measures in place to stop free proxies. 
+
 # This tutorial helped me get started with scraping in python
 # https://nanonets.com/blog/web-scraping-with-python-tutorial/
 
-
-##Working on rotating proxies this afternoon
-# proxy_website = "https://github.com/clarketm/proxy-list/blob/master/proxy-list-raw.txt"
-# r = requests.get(proxy_website)
-# soup = BS(r.content, 'html.parser')
-# # print(r.text)
-# print(soup.text)
-# URL of the webpage to scrape
-# URL of the page to scrape
-
-
+# This function connects to a github page that contains a list of proxies
+# and scrapes the list of proxies from github. Then the function tries to 
+# connect to amazon with the various proxies (choes at random) from the list. 
 def get_proxies():
-    
     # URL of the raw text file containing the proxy list
     url = "https://raw.githubusercontent.com/clarketm/proxy-list/master/proxy-list-raw.txt"
     response = requests.get(url) #connect to github
@@ -69,13 +69,14 @@ print(working)
 listOfUrls = []
 bookData = []
 
+#stuctrure I made to hold book details. 
 class BookStruct:
     def __init__(book, title, price, field3):
         book.title = title
         book.price = price
         book.field3 = field3
 
-#Enter the filepath for the csv file here
+#Enter the filepath for the csv file full of potential proxies here
 file = "../src/main/scala/bookslinks.csv"
 with open(file, 'r') as file:
     lines = file.readlines()
@@ -103,6 +104,7 @@ end_time = time.time()
 elapsed_time = end_time - start_time
 
 print(f"Elapsed time: {elapsed_time} seconds")
+
 # # Step 2: Check if the request was successful
 # if response.status_code == 200:
 #     # Step 3: Parse the HTML content

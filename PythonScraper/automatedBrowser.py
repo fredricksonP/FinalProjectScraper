@@ -5,6 +5,14 @@ from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 import time
 
+# This file was way of learning how to use browser automation in python. I had nearly no
+# clue how to use a web driver. My only "experience" was my failure to try and 
+# incorperate selenium web driver into scala. However, this attempt proved to be
+# successful and the tutorial I followed was quite helpful. However, the tutorial 
+# chose to scrape websites using xpath instead of beautiful soup. This gave me an
+# opportunity to learn yet another scraping technique, but I was not as fond of using
+# xpath over beautiful soup for scraping.
+
 #Specify our expiremental options to connect to sites
 my_options = Options()
 my_options.add_experimental_option("detach", True)
@@ -43,6 +51,6 @@ time.sleep(3)
 
 purchase_buttons = driver.find_elements("xpath", "//a[.//span[text()[contains(., 'Paperback')]]]//span[text()[contains(., '$')]]")
 
-
+# Get all of the inner html from the purchase buttons on amazon
 for button in purchase_buttons:
     print(button.get_attribute("innerHTML"))

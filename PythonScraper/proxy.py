@@ -1,9 +1,14 @@
 import threading
-import queue
 import concurrent.futures
 import requests
 
-q = queue.Queue()
+# This file calls an API for proxyscrape.com which returns a list of free
+# proxies (stored in a txt file) that's updated every five minutes from the website. However, 
+# as I've come to learn, most free proxies don't work. So this code checks the 
+# list of proxies concurrently to see if they can establish a connection to 
+# books.toscrape.com. If a connection can be establisd successfully, I write the
+# the proxies IP to a file called wroking_proxies.txt
+
 valid_proxies = []
 
 #Function to check if a free proxy is valid or not
@@ -34,12 +39,13 @@ if proxies_response.status_code == 200:
         in_file.write(file_text)
 
 
-#Open the list of free proxies
+#Open the list of free proxies and use concurrent futures
+# to Check the proxies in parallel
 with open("http_proxies.txt", "r") as f: 
     print(f)
     proxies = []
     proxies = f.read().split("\n")
+    #Pythons version of futures and parallelism below. 
     with concurrent.futures.ThreadPoolExecutor() as ex:
         ex.map(check_proxies, proxies)
-    # for p in proxies:
-    #     q.put(p)
+

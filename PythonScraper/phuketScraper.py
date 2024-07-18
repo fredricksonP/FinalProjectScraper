@@ -3,6 +3,7 @@
 # Once the content is loaded, beautiful soup is used to scrape the target content
 # This code introduces purposeful optimized timeouts to give dynamic content time
 # to load. This file scrapes realty listing from phuket. 
+
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
@@ -35,13 +36,14 @@ class PropertyListing:
 
 all_properties: list[PropertyListing] = []
 
+#loop to load now pages of dynamic content by clicking show more. 
 for i in range(1, 8):
     # Locate the button using its id
     print("loaded more Phuket content: " + str(i))
     view_more_button = driver.find_element("id", "show-more")
     # Click the button
     view_more_button.click()
-    time.sleep(3)
+    time.sleep(3) #Introduce a purposeful delay to allow data load
 
 #Now that a bunch of content it loaded, connect to the page with beautiful soup 
 page_source = driver.page_source
@@ -71,6 +73,7 @@ for p in properties:
     # print(f"Price USD: ${usd}USD")
     # print(f"Rooms: {rooms}")
     # print('---')
+    
     newProp = PropertyListing(title, price, usd, rooms)
     all_properties.append(newProp)
 
