@@ -5,12 +5,17 @@ import scala.io.Source
 import java.io.{File, PrintWriter}
 import org.jsoup.Jsoup
 import scala.util.{Failure, Success}
+import java.io.{FileWriter, BufferedWriter}
 
 object ProxyChecker extends App {
   val validProxies = new java.util.concurrent.CopyOnWriteArrayList[String]()
   val apiUrl = "https://api.proxyscrape.com/v3/free-proxy-list/get?request=displayproxies&proxy_format=ipport&format=text"
   val workingProxiesFile = "working_proxies.txt"
   val potentialProxiesFile = "potential_proxies.txt"
+
+  //Learned how to use filewriter with the help of this website: https://alvinalexander.com/scala/how-to-write-text-files-in-scala-printwriter-filewriter/
+//  val outputFile = new FileWriter("working_proxies.txt", true)
+//  val bw = new BufferedWriter(outputFile)
 
   def checkProxies(proxy: String): Unit = {
     println(s"Checking $proxy")
@@ -28,11 +33,12 @@ object ProxyChecker extends App {
       response.statusCode() match {
         case 200 =>
           println(s"SUCCESS: $proxy")
-          validProxies.add(proxy)
-          val pw = new PrintWriter(new java.io.FileOutputStream(new File(workingProxiesFile), true))
-          pw.println(proxy)
-          pw.close()
-          println(s"SUCCESS: $proxy")
+//          validProxies.add(proxy)
+//          val outputFile = new FileWriter("working_proxies.txt", true)
+//          val bw = new BufferedWriter(outputFile)
+//          bw.write(proxy + "\n")
+//          bw.close()
+          println(s"Done!!! SUCCESS: $proxy ")
         case _ => println(s"$proxy Failed with status ${response.statusCode()}")
       }
     }
@@ -69,9 +75,15 @@ object ProxyChecker extends App {
 
   val aggregated = Future.sequence(futures)
   aggregated.onComplete {
-    case Success(_) => println("All proxies checked.")
+    case Success(proxies) => {
+      println("All proxies checked.")
+//      val pw = new PrintWriter(workingProxiesFile)
+//      pw.write(proxy)
+//      pw.close()
+    }
     case Failure(e) => println(s"An error occurred: ${e.getMessage}")
   }
+
 
   Await.result(aggregated, Duration.Inf)
 }

@@ -10,17 +10,17 @@ object AllSolutionsParallel extends App {
   //Function to start python scripts as futures so they can be run in parallel
   def pythonScriptFuture(scriptPath: String): Future[Int] = Future {
     //Environment path
-    val pythonVenvPath = "PythonScraper/venv/bin/python" 
+    val pythonVenvPath = "PythonScraper/venv/bin/python"
     val command = s"$pythonVenvPath $scriptPath"
     val exitCode = command.!
     exitCode
   }
 
   //Old sequential soloution below
-  
-//  val pythonVenvPath = "PythonScraper/venv" 
-//  val pythonVenvPath = "PythonScraper/venv/bin/python" 
-//  val scriptPath = "PythonScraper/realtyAutoScraper.py" 
+
+//  val pythonVenvPath = "PythonScraper/venv"
+//  val pythonVenvPath = "PythonScraper/venv/bin/python"
+//  val scriptPath = "PythonScraper/realtyAutoScraper.py"
 //  val command = s"$pythonVenvPath $scriptPath"
 //    val exitCode = command.!
   // Check the exit code
@@ -32,20 +32,20 @@ object AllSolutionsParallel extends App {
 
     //Specify file paths to python code so that the scripts can be started as futures
     val startTime = System.nanoTime()
-    val bankgkokRealty = pythonScriptFuture("PythonScraper/realtyAutoScraper.py")
-    val phuketRealty = pythonScriptFuture("PythonScraper/phuketScraper.py")
+    val bankgkokRealty = pythonScriptFuture("PythonScraper/parBankokScraper.py")
+    val phuketRealty = pythonScriptFuture("PythonScraper/parPhuketScraper.py")
 
-    //Start the books to scrape parallel code (scala) as future so that that 
+    //Start the books to scrape parallel code (scala) as future so that that
     // it can be run at the same time as the python webdrivers
     val futureBooks: Future[Unit] = Future {
       parallelScaperWithData.runLogic()
     }
-  
+
     //Await the reult of all futures
     val result = Await.result(phuketRealty, Duration.Inf)
     val _ = Await.result(bankgkokRealty, Duration.Inf)
     val _ = Await.result(futureBooks, Duration.Inf)
-    
+
     //Showing quantifiable results by printing out time taken.
     val endTime = System.nanoTime()
     val durationInSeconds = (endTime - startTime) / 1e9
